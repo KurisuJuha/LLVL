@@ -4,24 +4,25 @@ use anyhow::{Ok, Result};
 
 use super::memory::Memory;
 
-pub struct Interpreter<R: Read, W: Write> {
+pub struct Interpreter {
     position: usize,
     memory: Memory,
-    input: R,
-    output: W,
 }
 
-impl<R: Read, W: Write> Interpreter<R, W> {
-    pub fn new(memory: Memory, input: R, output: W) -> Interpreter<R, W> {
+impl Interpreter {
+    pub fn new(memory: Memory) -> Interpreter {
         Interpreter {
             position: 0,
             memory,
-            input,
-            output,
         }
     }
 
-    pub fn run(&mut self, program: &[u8]) -> Result<()> {
+    pub fn run(
+        &mut self,
+        program: &[u8],
+        input: &mut impl Read,
+        output: &mut impl Write,
+    ) -> Result<()> {
         let mut program_counter = 0;
         while program_counter < program.len() {
             let instruction = program[program_counter];
@@ -60,11 +61,11 @@ impl<R: Read, W: Write> Interpreter<R, W> {
                 }
                 b'.' => {
                     let value = self.memory.get(self.position);
-                    self.output.write_all(&[value])?;
+                    output.write_all(&[value])?;
                 }
                 b',' => {
                     let mut buffer = [0];
-                    self.input.read_exact(&mut buffer)?;
+                    input.read_exact(&mut buffer)?;
                     self.memory.set(self.position, buffer[0]);
                 }
                 _ => {}
@@ -112,12 +113,12 @@ impl<R: Read, W: Write> Interpreter<R, W> {
 pub fn run(program: &[u8]) -> Result<Memory> {
     let memory = Memory::new();
 
-    let input = io::stdin();
-    let output = io::stdout();
+    let mut input = io::stdin();
+    let mut output = io::stdout();
 
-    let mut interpreter = Interpreter::new(memory, input, output);
+    let mut interpreter = Interpreter::new(memory);
 
-    let _ = interpreter.run(program);
+    let _ = interpreter.run(program, &mut input, &mut output);
 
     Ok(interpreter.memory)
 }
