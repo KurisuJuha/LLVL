@@ -12,6 +12,11 @@ use memory::Memory;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[wasm_bindgen]
 pub fn run(code: String) -> String {
     let mut table = HashMap::new();
     table.insert("すきすきだいすき", b'>');
