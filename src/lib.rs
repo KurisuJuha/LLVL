@@ -12,7 +12,7 @@ use memory::Memory;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn run(code: &str) -> String {
+pub fn run(code: String) -> String {
     let mut table = HashMap::new();
     table.insert("すきすきだいすき", b'>');
     table.insert("すきすき大好き", b'<');
@@ -28,7 +28,11 @@ pub fn run(code: &str) -> String {
 
     let mut interpreter = Interpreter::new(Memory::new());
     interpreter
-        .run(&llvl::to_bf_code(code, &table), &mut input, &mut buffer)
+        .run(
+            &llvl::to_bf_code(code.as_str(), &table),
+            &mut input,
+            &mut buffer,
+        )
         .unwrap();
 
     let inner = buffer.into_inner();

@@ -100,7 +100,6 @@ export function run(code) {
         deferred2_1 = r1;
         return getStringFromWasm0(r0, r1);
     } finally {
-        console.log(import.meta.url);
         wasm.__wbindgen_add_to_stack_pointer(16);
         wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
@@ -178,7 +177,6 @@ async function __wbg_init(input) {
     if (wasm !== undefined) return wasm;
 
     if (typeof input === 'undefined') {
-        console.log(import.meta.url);
         input = new URL('llvl_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
