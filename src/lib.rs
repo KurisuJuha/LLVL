@@ -4,7 +4,7 @@ mod memory;
 
 use std::{
     collections::HashMap,
-    io::{stdin, stdout, Cursor, Write},
+    io::{stdin, Cursor},
 };
 
 use interpreter::Interpreter;
